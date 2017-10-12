@@ -11,58 +11,49 @@ db = SQLAlchemy(app)
 class Blog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(50))
-    title = db.Column(db.String(100))
+    body = db.Column(db.String(100))
 
 def _init_(self, title, body):
     self.title = title
     self.body = body    
 
-@app.route('/blog', methods=['POST', 'GET'])
-def index():
+@app.route('/blog')
+def display_blog():
+
     if request.args:
         blog_id = request.args.get("id")
         blog = Blog.query.get(blog_id)
+        return render_template('blogentry.html', page_title="Blog Entry" blog=blog)
 
-        return render_template('blogentry.html, blog=blog')
     else:
         blogs = Blog.query.all()
         
-        return render_template('blog.html')
+        return render_template('blog.html', blogs=blogs)
         
 @app.route('/newpost', methods=['GET', 'POST'])
-def add_blog():
+def add_post():
     if request.method == 'GET':
-         return render_template('newpost.html', title=add_blog_entry)
+         return render_template('newpost.html')
 
     if request.method == 'POST':    
-        blog_title = request.form('title')
-        blog_body = request.form('body')
+        title = request.form['title']
+        body = request.form['body']
         title_error = ""
         body_error = ""
 
-    if len(blog_title) < 1:
-        title_error = "Invalid Title"
+        if title == "":
+            title_error = "Put some words in Title field" 
+        if body == "":
+            body_error = "Put some words in the Blog field"    
 
-    if len(blog_body) < 1:
-        body_error = "Invalid Body"
-   
-@app.route('/delete-task', methods=['POST'])
-def delete_task():
+        if not title_error and not body_error:
+            new_blog = Blog(title, body)
+            db.session.add(new_blog)
+            db.session.commit()
+            query_param_url = "/blog?id=" + str(new_blog.id)    
+            return redirect(query_param_url)
+        else:
+            return render_template('newpost.html', title_error=title_error, body_error=body_error)        
 
-    task_id = int(request.form['task-id'])
-    task = Task.query.get(task_id)
-    task.completed = True
-    db.session.add(task)
-    db.session.commit()
-
-    return redirect('/')
-
-    if not title_error and not body_error:
-        new_blog = Blog(blog_title, blog_body)
-        db.session.sdd(new_blog)
-        db.session.commit()
-        query_parm_url = "/blog?id+" + str(new_blog.id)    
-        return redirect(query_parm_url)
-
-    if __name__ == '__main__':
-         app.run()
+if __name__ == '__main__':
+    app.run()\

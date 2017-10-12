@@ -1,6 +1,17 @@
 <!doctype html>
 <html>
-    <title>{{title}}</title>
-    <link rel="stylesheet" type="text/css" href="{{url_for "
+    <head>
+        <title>{{title}}</title>
+    </head>
+<body>
+    <nav>
+        <a href="/blog">Main Blog Page</a>
+        <a href="/newpost">Add a Blog ENtry</a>
+    </nav>
 
+    {% block content %}
+    <h1>{{page_title}}</h1>
+    {% endblock %}
+
+</body>
 </html>
