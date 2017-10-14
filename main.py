@@ -1,6 +1,5 @@
-from flask import Flask, request, redirect, render_template
+from flask import Flask, redirect, render_template, request
 from flask_sqlalchemy import SQLAlchemy
-
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -13,9 +12,9 @@ class Blog(db.Model):
     title = db.Column(db.String(50))
     body = db.Column(db.String(100))
 
-def _init_(self, title, body):
-    self.title = title
-    self.body = body    
+    def __init__(self, title, body):
+        self.title = title
+        self.body = body    
 
 @app.route('/blog')
 def display_blog():
@@ -23,7 +22,7 @@ def display_blog():
     if request.args:
         blog_id = request.args.get("id")
         blog = Blog.query.get(blog_id)
-        return render_template('blogentry.html', page_title="Blog Entry" blog=blog)
+        return render_template('blogentry.html', page_title="Blog Entry", blog=blog)
 
     else:
         blogs = Blog.query.all()
@@ -56,4 +55,4 @@ def add_post():
             return render_template('newpost.html', title_error=title_error, body_error=body_error)        
 
 if __name__ == '__main__':
-    app.run()\
+    app.run()
