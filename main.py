@@ -42,7 +42,7 @@ def login():
         username = request.form['username']
         password = request.form['password']
         user = User.query.filter_by(username=username).first()
-        login_in error=""
+        login_error = ""
 
         if user and user.password == password:
             session['username'] = username
@@ -89,15 +89,16 @@ def signup():
             return redirect('/newpost')
         else:        
             existing_user_error = 'Username already exists'
-            return render_template('signup.html',existing_user_error=existing_user_error)
+            return render_template('signup.html', existing_user_error=existing_user_error)
     return render_template('signup.html', username_error=username_error,
                            password_error=password_error,
                            verify_error=verify_error)
 
-@app.route("/")
+
+@app.route('/')
 def index():
     blogs = Blog.query.order_by(Blog.id.desc()).all()
-    return render_template("index.html", title="Blog Posts by Author", blogs=blogs)
+    return render_template('index.html', title="Blog Posts by Author", blogs=blogs)
 
 @app.route('/logout')
 def logout():
@@ -143,10 +144,11 @@ def add_post():
             body_error = "Put some words in the Blog field"    
 
         if not title_error and not body_error:
-            new_blog = Blog(title, body)
+            owner = User.query.filter_by(username=session['username']).first()    
+            new_blog = Blog(title, body, owner)
             db.session.add(new_blog)
             db.session.commit()
-            query_param_url = "/blog?id=" + str(new_blog.id)    
+            query_param_url = "/blog?id=" + str(new_blog.id) 
             return redirect(query_param_url)
         else:
             return render_template('newpost.html', title_error=title_error, body_error=body_error)        

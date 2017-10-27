@@ -2,10 +2,10 @@
 
 {% block content %}
     <h1> Blog</h1>
-        <div class = 'blogentry'>
+    <h4>click "Add a Blog ENtry" and start typing</h4>    
             {% for blog in blogs %}
-            <a href="/blog?id={{blog.id}}">{{blog.title}}</a>
-            <p>{{blog.body}}</p>
-            {% endfor %}
-        </div>    
+            <a href="/blog?id={{blog.id}}">{{ blog.title }}</a>
+            <p>{{ blog.body }}</p>
+{% endfor %}
+
 {% endblock %}            

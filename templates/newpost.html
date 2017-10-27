@@ -4,10 +4,11 @@
 <form method='Post'>
     <label for="title">Title:</label>
         <input type="text" name="title" value="{{title}}">
-        <span class="error">{{title_error}}</span>
+        <span class="error">{{ title_error }}</span>
     <label for="body">New Blog:<br></label>
         <textarea name="body" id="" cols="30" rows="10"></textarea>
-        <span class="error">{{ body_error}}</span><br>
+        <span class="error">{{ body_error }}</span><br>
         <input type="submit" value="Add Entry">
 </form>
+
 {% endblock %}
